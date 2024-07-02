@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Dimensions, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, View, Alert, Text, AsyncStorage } from 'react-native';
 import { questions } from './quizData';
-import { QuizButton, QuestionText } from './QuizComponents';
+
+const { width, height } = Dimensions.get('window');
 
 export default function QuizScreen({ navigation }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [fadeAnim] = useState(new Animated.Value(0));
 
-  // Load saved progress when component mounts
   useEffect(() => {
     loadProgress();
+    fadeIn();
   }, []);
 
-  // Timer effect
   useEffect(() => {
     if (timeLeft > 0) {
       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -24,9 +27,14 @@ export default function QuizScreen({ navigation }) {
     }
   }, [timeLeft]);
 
-  /**
-   * Loads saved quiz progress from AsyncStorage
-   */
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const loadProgress = async () => {
     try {
       const savedProgress = await AsyncStorage.getItem('quizProgress');
@@ -40,9 +48,6 @@ export default function QuizScreen({ navigation }) {
     }
   };
 
-  /**
-   * Saves current quiz progress to AsyncStorage
-   */
   const saveProgress = async () => {
     try {
       const progress = JSON.stringify({ currentQuestion, score });
@@ -52,10 +57,6 @@ export default function QuizScreen({ navigation }) {
     }
   };
 
-  /**
-   * Handles user's answer selection
-   * @param {string} selectedAnswer - The answer selected by the user
-   */
   const handleAnswer = (selectedAnswer) => {
     if (selectedAnswer === questions[currentQuestion].correctAnswer) {
       setScore(score + 1);
@@ -65,91 +66,133 @@ export default function QuizScreen({ navigation }) {
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
       setTimeLeft(30);
-      saveProgress(); // Save progress after each question
+      saveProgress();
+      fadeIn();
     } else {
       endQuiz();
     }
   };
 
-  /**
-   * Ends the quiz and shows the final score
-   */
   const endQuiz = () => {
-    Alert.alert(
-      "Quiz Completed",
-      `Your score: ${score}/${questions.length}`,
-      [
-        { text: "Try Again", onPress: () => resetQuiz() },
-        { text: "Home", onPress: () => navigation.navigate('Home') }
-      ]
-    );
-  };
-
-  /**
-   * Resets the quiz to initial state
-   */
-  const resetQuiz = async () => {
-    setCurrentQuestion(0);
-    setScore(0);
-    setTimeLeft(30);
-    await AsyncStorage.removeItem('quizProgress');
+    navigation.navigate('QuizResult', { score, total: questions.length });
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.infoContainer}>
-        <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>
-        <Text style={styles.timerText}>Time: {timeLeft}s</Text>
-      </View>
-      <View style={styles.questionContainer}>
-        <QuestionText text={questions[currentQuestion].question} />
-      </View>
-      <View style={styles.optionsContainer}>
-        {questions[currentQuestion].options.map((option, index) => (
-          <QuizButton
-            key={index}
-            text={option}
-            onPress={() => handleAnswer(option)}
-          />
-        ))}
-      </View>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <LinearGradient
+        colors={['#4c669f', '#3b5998', '#192f6a']}
+        style={styles.gradient}
+      >
+        <View style={styles.header}>
+          <Text style={styles.scoreText}>Score: {score}/{questions.length}</Text>
+          <View style={styles.timerContainer}>
+            <Ionicons name="time-outline" size={24} color="white" />
+            <Text style={styles.timerText}>{timeLeft}s</Text>
+          </View>
+        </View>
+        
+        <View style={styles.questionContainer}>
+          <Animated.Text style={[styles.questionText, { opacity: fadeAnim }]}>
+            {questions[currentQuestion].question}
+          </Animated.Text>
+        </View>
+
+        <View style={styles.optionsContainer}>
+          {questions[currentQuestion].options.map((option, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.optionButton}
+              onPress={() => handleAnswer(option)}
+            >
+              <Text style={styles.optionText}>{option}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${((currentQuestion + 1) / questions.length) * 100}%` }]} />
+        </View>
+      </LinearGradient>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f0f0f0',
   },
-  infoContainer: {
+  gradient: {
+    flex: 1,
+    padding: 20,
+  },
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
   },
   scoreText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'white',
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   timerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#e74c3c',
+    color: 'white',
+    marginLeft: 5,
   },
   questionContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 15,
     padding: 20,
     marginBottom: 20,
-    elevation: 3,
+    minHeight: height * 0.2,
+    justifyContent: 'center',
+    elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  questionText: {
+    fontSize: 20,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#333',
   },
   optionsContainer: {
     flex: 1,
     justifyContent: 'space-around',
+  },
+  optionButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+  },
+  optionText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#333',
+  },
+  progressContainer: {
+    height: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#4CAF50',
   },
 });
