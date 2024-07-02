@@ -1,10 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
+/**
+ * HomeScreen component
+ * Displays the welcome screen and start quiz button
+ * 
+ * @param {object} navigation - Navigation object for screen transitions
+ */
+
 export default function HomeScreen({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Quiz Time!</Text>
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome to Brain Blasters!</Text> 
       <TouchableOpacity 
         style={styles.button}
         onPress={() => navigation.navigate('Quiz')}
