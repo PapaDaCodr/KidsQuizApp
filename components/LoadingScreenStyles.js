@@ -1,43 +1,29 @@
 import { StyleSheet } from 'react-native';
-
+import { Colors } from '../styles';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3498db', // Replace with your brand color
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
-  bubble: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: Colors.primary,
   },
   text: {
-    fontFamily: 'Slabo', // Use your custom font
-    color: '#FFF', 
+    fontFamily: 'RobotoSlab',
+    color: Colors.text,
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 20,
   },
   progressBarContainer: {
     width: '80%',
     height: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: Colors.accent,
     borderRadius: 5,
     overflow: 'hidden',
-    marginTop: 20,
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.textLight,
   },
 });

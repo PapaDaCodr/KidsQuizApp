@@ -1,12 +1,20 @@
 import { StyleSheet } from 'react-native';
 
+const Colors = {
+  primary: '#7FDBFF',  // Light Blue (background)
+  secondary: '#00BFFF', // Blue
+  accent: '#FF69B4',    // Pink
+  text: '#000000',      // Black
+  textLight: '#FFFFFF', // White
+};
+
 export const getStyles = (isDarkMode) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: isDarkMode ? '#121212' : '#FFFFFF',
+    backgroundColor: isDarkMode ? Colors.text : Colors.primary,
   },
   scrollViewContent: {
     flexGrow: 1,
@@ -18,27 +26,27 @@ export const getStyles = (isDarkMode) => StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: isDarkMode ? '#FFFFFF' : '#000000',
+    color: isDarkMode ? Colors.textLight : Colors.text,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: Colors.secondary,
     padding: 10,
     borderRadius: 5,
     marginVertical: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: Colors.textLight,
     fontSize: 18,
   },
   topicButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: Colors.accent,
     padding: 15,
     borderRadius: 5,
     marginVertical: 10,
     width: '100%',
   },
   topicButtonText: {
-    color: '#FFFFFF',
+    color: Colors.textLight,
     fontSize: 18,
     textAlign: 'center',
   },
@@ -46,23 +54,25 @@ export const getStyles = (isDarkMode) => StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
-    color: isDarkMode ? '#FFFFFF' : '#000000',
+    color: isDarkMode ? Colors.textLight : Colors.text,
   },
   answerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: Colors.secondary,
     padding: 10,
     borderRadius: 5,
     marginVertical: 5,
     width: '100%',
   },
   answerButtonText: {
-    color: '#FFFFFF',
+    color: Colors.textLight,
     fontSize: 16,
     textAlign: 'center',
   },
   resultText: {
     fontSize: 24,
     marginBottom: 20,
-    color: isDarkMode ? '#FFFFFF' : '#000000',
+    color: isDarkMode ? Colors.textLight : Colors.text,
   },
 });
+
+export { Colors };

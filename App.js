@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AppRegistry } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useColorScheme } from 'react-native';
@@ -9,28 +8,24 @@ import TopicsScreen from './screens/TopicsScreen';
 import QuizScreen from './screens/QuizScreen';
 import ResultScreen from './screens/ResultScreen';
 import ThemeToggle from './components/ThemeToggle';
-import LoadingScreen from './components/LoadingScreen'; // Import LoadingScreen
+import LoadingScreen from './components/LoadingScreen';
 
 const Stack = createStackNavigator();
 
-// Correctly register your app component
-AppRegistry.registerComponent('computer-science-quiz', () => App); 
-
 const App = () => {
   const scheme = useColorScheme();
-  const [isLoading, setIsLoading] = useState(true); // Add isLoading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
   };
 
-  // Render LoadingScreen while app is loading
   if (isLoading) {
-    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />; 
+    return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
   }
 
   return (
-    <ThemeProvider> 
+    <ThemeProvider>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={({ navigation }) => ({
