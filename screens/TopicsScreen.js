@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { useTheme } from '../ThemeContext';
 import { getStyles } from '../styles';
 import { quizQuestions } from '../quizQuestions';
@@ -9,7 +9,10 @@ const TopicsScreen = ({ navigation }) => {
   const styles = getStyles(isDarkMode);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView 
+      style={{ backgroundColor: isDarkMode ? '#121212' : '#FFFFFF' }}
+      contentContainerStyle={styles.scrollViewContent}
+    >
       {Object.keys(quizQuestions).map((topic, index) => (
         <TouchableOpacity
           key={index}
