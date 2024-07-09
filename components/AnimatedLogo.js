@@ -1,85 +1,63 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, View } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withSequence,
-  withDelay,
-  withTiming,
-  Easing,
-} from 'react-native-reanimated';
-import { Colors } from '../styles';
-
-const AnimatedLetter = ({ letter, delay }) => {
-  const positionX = useSharedValue(Math.random() * 300 - 150);
-  const positionY = useSharedValue(Math.random() * 300 - 150);
-  const scale = useSharedValue(0);
-
-  useEffect(() => {
-    scale.value = withDelay(
-      delay,
-      withSpring(1, { damping: 2, stiffness: 80 })
-    );
-
-    positionX.value = withDelay(
-      delay,
-      withSequence(
-        ...Array(3).fill(0).flatMap(() => [
-          withTiming(Math.random() * 300 - 150, { duration: 500 }),
-          withTiming(Math.random() * 300 - 150, { duration: 500 }),
-        ]),
-        withTiming(0, { duration: 500, easing: Easing.bezier(0.25, 0.1, 0.25, 1) })
-      )
-    );
-
-    positionY.value = withDelay(
-      delay,
-      withSequence(
-        ...Array(3).fill(0).flatMap(() => [
-          withTiming(Math.random() * 300 - 150, { duration: 500 }),
-          withTiming(Math.random() * 300 - 150, { duration: 500 }),
-        ]),
-        withTiming(0, { duration: 500, easing: Easing.bezier(0.25, 0.1, 0.25, 1) })
-      )
-    );
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: positionX.value },
-      { translateY: positionY.value !== undefined ? positionY.value : 0 },
-      { scale: scale.value },
-    ],
-  }));
-
-  return (
-    <Animated.Text style={[styles.letter, animatedStyle]}>{letter}</Animated.Text>
-  );
-};
+import { View, Text, StyleSheet, Animated } from 'react-native';
 
 const AnimatedLogo = () => {
+  const opacity = React.useRef(new Animated.Value(0)).current;
+  const scale = React.useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Fade in animation
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+
+    // Breathing animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, {
+          toValue: 1.05,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
   return (
     <View style={styles.container}>
-      {'MONKEY'.split('').map((letter, index) => (
-        <AnimatedLetter key={index} letter={letter} delay={index * 200} />
-      ))}
+      <Animated.Text 
+        style={[
+          styles.text, 
+          { 
+            opacity: opacity,
+            transform: [{ scale: scale }]
+          }
+        ]}
+      >
+        MONKEY
+      </Animated.Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: 100,
+    alignItems: 'center',
+    height: 200,
     marginBottom: 20,
   },
-  letter: {
-    fontSize: 40,
+  text: {
+    fontSize: 48,
     fontWeight: 'bold',
-    color: Colors.text,
+    color: '#EA51DA', // You can change this to your desired color
   },
 });
 

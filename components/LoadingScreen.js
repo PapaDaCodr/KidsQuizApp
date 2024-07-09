@@ -4,44 +4,37 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withRepeat,
   Easing,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import styles from './LoadingScreenStyles';
 import AnimatedLogo from './AnimatedLogo';
-import { Colors } from '../styles';
 
 const LoadingScreen = ({ onLoadingComplete }) => {
   const [fontsLoaded] = useFonts({
     'RobotoSlab': require('../assets/fonts/RobotoSlab-VariableFont_wght.ttf'),
   });
 
-  const fadeAnimation = useSharedValue(0);
   const progress = useSharedValue(0);
-  const breathe = useSharedValue(1);
+  const opacity = useSharedValue(0);
 
   useEffect(() => {
-    fadeAnimation.value = withTiming(1, { duration: 1000 });
-    progress.value = withTiming(1, { duration: 8000 });
-    breathe.value = withRepeat(
-      withTiming(1.1, { duration: 1000, easing: Easing.sine }),
-      -1,
-      true
-    );
+    progress.value = withTiming(1, { duration: 8000, easing: Easing.linear });
+    opacity.value = withTiming(1, { duration: 1000 });
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       onLoadingComplete();
     }, 8000);
-  }, []);
 
-  const containerStyle = useAnimatedStyle(() => ({
-    opacity: fadeAnimation.value,
-    transform: [{ scale: breathe.value }],
-  }));
+    return () => clearTimeout(timer);
+  }, [onLoadingComplete]);
 
   const progressStyle = useAnimatedStyle(() => ({
     width: `${progress.value * 100}%`,
+  }));
+
+  const containerStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
   }));
 
   if (!fontsLoaded) {

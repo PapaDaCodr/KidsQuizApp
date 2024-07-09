@@ -1,78 +1,90 @@
+// styles.js
 import { StyleSheet } from 'react-native';
 
-const Colors = {
-  primary: '#7FDBFF',  // Light Blue (background)
-  secondary: '#00BFFF', // Blue
-  accent: '#FF69B4',    // Pink
-  text: '#000000',      // Black
-  textLight: '#FFFFFF', // White
-};
-
-export const getStyles = (isDarkMode) => StyleSheet.create({
+export const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: isDarkMode ? Colors.text : Colors.primary,
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: theme.backgroundColor,
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: theme.textColor,
     marginBottom: 20,
-    color: isDarkMode ? Colors.textLight : Colors.text,
   },
-  button: {
-    backgroundColor: Colors.secondary,
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 10,
+  text: {
+    fontSize: 16,
+    color: theme.textColor,
+    marginBottom: 10,
   },
-  buttonText: {
-    color: Colors.textLight,
-    fontSize: 18,
-  },
-  topicButton: {
-    backgroundColor: Colors.accent,
+  primaryButton: {
+    backgroundColor: theme.primaryColor,
     padding: 15,
     borderRadius: 5,
-    marginVertical: 10,
-    width: '100%',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  topicButtonText: {
-    color: Colors.textLight,
-    fontSize: 18,
-    textAlign: 'center',
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
-  questionText: {
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: isDarkMode ? Colors.textLight : Colors.text,
+  secondaryButton: {
+    backgroundColor: theme.secondaryColor,
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  answerButton: {
-    backgroundColor: Colors.secondary,
+  secondaryButtonText: {
+    color: theme.textColor,
+    fontSize: 16,
+  },
+  inputField: {
+    backgroundColor: theme.inputBackgroundColor,
+    color: theme.textColor,
     padding: 10,
     borderRadius: 5,
-    marginVertical: 5,
-    width: '100%',
+    marginBottom: 10,
   },
-  answerButtonText: {
-    color: Colors.textLight,
-    fontSize: 16,
-    textAlign: 'center',
+  card: {
+    backgroundColor: theme.cardBackgroundColor,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  resultText: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: isDarkMode ? Colors.textLight : Colors.text,
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: theme.textColor,
+    marginBottom: 10,
   },
+  cardText: {
+    fontSize: 14,
+    color: theme.textColor,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: theme.footerBackgroundColor,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: theme.borderColor,
+  },
+  footerTab: {
+    alignItems: 'center',
+  },
+  footerTabText: {
+    color: theme.textColor,
+    fontSize: 12,
+    marginTop: 5,
+  },
+  // Add more custom styles as needed
 });
-
-export { Colors };

@@ -1,28 +1,37 @@
+
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useTheme } from '../ThemeContext';
+import { useQuizStructure } from '../quizStructureContext';
 import { getStyles } from '../styles';
-import { quizQuestions } from '../quizQuestions';
+import Footer from './Footer';
 
 const TopicsScreen = ({ navigation }) => {
-  const { isDarkMode } = useTheme();
-  const styles = getStyles(isDarkMode);
+  const { theme } = useTheme();
+  const { quizStructure } = useQuizStructure();
+  const styles = getStyles(theme);
+
+  const renderTopic = ({ item: topic }) => (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate('TopicUnits', { topic })}
+    >
+      <Text style={styles.cardTitle}>{topic}</Text>
+      <Text style={styles.cardText}>{`${quizStructure[topic].length} units`}</Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <ScrollView 
-      style={{ backgroundColor: isDarkMode ? '#121212' : '#FFFFFF' }}
-      contentContainerStyle={styles.scrollViewContent}
-    >
-      {Object.keys(quizQuestions).map((topic, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.topicButton}
-          onPress={() => navigation.navigate('Quiz', { topic })}
-        >
-          <Text style={styles.topicButtonText}>{topic}</Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <FlatList
+        style={styles.container}
+        data={Object.keys(quizStructure)}
+        renderItem={renderTopic}
+        keyExtractor={(item) => item}
+        ListHeaderComponent={<Text style={styles.title}>Topics</Text>}
+      />
+      <Footer navigation={navigation} activeTab="Topics" />
+    </View>
   );
 };
 
