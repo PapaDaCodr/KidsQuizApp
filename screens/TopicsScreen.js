@@ -11,6 +11,10 @@ const TopicsScreen = ({ navigation }) => {
   const { quizStructure } = useQuizStructure();
   const styles = getStyles(theme);
 
+  const handleTopicPress = (topic) => {
+    navigation.navigate('TopicUnits', { topic: topic });
+  };  
+
   const renderTopic = ({ item: topic }) => (
     <TouchableOpacity
       style={styles.card}
