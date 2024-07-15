@@ -13,10 +13,12 @@ import QuizScreen from './screens/QuizScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import TopicUnitsScreen from './screens/TopicUnitsScreen';
+import UnitQuestionsScreen from './screens/UnitQuestionsScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
 
 const TopicsStack = () => {
   const { colors } = useTheme();
@@ -29,8 +31,9 @@ const TopicsStack = () => {
       }}
     >
       <Stack.Screen name="TopicsList" component={TopicsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="TopicUnits" component={TopicUnitsScreen} />
-      <Stack.Screen name="Quiz" component={QuizScreen} />
+      <Stack.Screen name="TopicUnits" component={TopicUnitsScreen} options={({ route }) => ({ title: route.params.topic })} />
+      <Stack.Screen name="UnitQuestions" component={UnitQuestionsScreen} />
+      <Stack.Screen name="Quiz" component={QuizScreen} options={({ route }) => ({ title: `Quiz: ${route.params.unit}` })} />
     </Stack.Navigator>
   );
 };
